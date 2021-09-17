@@ -47,10 +47,8 @@ export class UserService {
     const salt = await bcrypt.genSalt();
 
     const firstCode = await bcrypt.hash(user.email, salt);
-    console.log(firstCode);
 
     const code = await firstCode.replace('/', '');
-    console.log(code);
 
     const newUser = { ...user, tokens: [{ code, type: 'active' }] };
 
