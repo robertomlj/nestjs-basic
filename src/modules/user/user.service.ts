@@ -10,12 +10,14 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { User } from './entities/user.entity';
 import * as bcrypt from 'bcrypt';
+import { MailService } from '../mail/mail.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private usersRepository: Repository<User>,
+    private mailService: MailService,
   ) {}
 
   async findAll(): Promise<User[]> {
@@ -54,7 +56,9 @@ export class UserService {
 
     const entity = this.usersRepository.create(newUser);
 
-    await this.usersRepository.save(entity);
+    const result = await this.usersRepository.save(entity);
+
+    this.mailService.sendConfirmationEmail(result, code);
   }
 
   async update(id: number, user: UpdateUserDto): Promise<User> {

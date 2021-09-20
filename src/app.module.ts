@@ -5,6 +5,7 @@ import { LoggerMiddleware } from './middlewares/logger.middleware';
 import { UserModule } from './modules/user/user.module';
 import { TokenModule } from './modules/token/token.module';
 import { getConnectionOptions } from 'typeorm';
+import { MailModule } from './modules/mail/mail.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { getConnectionOptions } from 'typeorm';
     }),
     UserModule,
     TokenModule,
+    MailModule,
   ],
   controllers: [],
   providers: [],
