@@ -16,3 +16,9 @@ services:
     restart: always
     ports:
       - 8888:8080
+
+  redisqueue:
+    image: redis:alpine
+    restart: always
+    ports:
+      - 6379:6379
