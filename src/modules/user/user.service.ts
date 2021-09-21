@@ -50,7 +50,9 @@ export class UserService {
 
     const firstCode = await bcrypt.hash(user.email, salt);
 
-    const code = await firstCode.replace('/', '');
+    const replacer = new RegExp('/', 'g');
+
+    const code = await firstCode.replace(replacer, '');
 
     const newUser = { ...user, tokens: [{ code, type: 'active' }] };
 
@@ -58,7 +60,12 @@ export class UserService {
 
     const result = await this.usersRepository.save(entity);
 
-    this.mailService.sendConfirmationEmail(result, code);
+    this.mailService.sendMail(
+      result,
+      code,
+      'confirmation',
+      'Confirmação de cadastro',
+    );
   }
 
   async update(id: number, user: UpdateUserDto): Promise<User> {
