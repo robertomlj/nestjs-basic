@@ -54,7 +54,7 @@ export class UserService {
 
     const code = await firstCode.replace(replacer, '');
 
-    const newUser = { ...user, tokens: [{ code, type: 'active' }] };
+    const newUser = { ...user, tokens: [{ code }] };
 
     const entity = this.usersRepository.create(newUser);
 

@@ -51,7 +51,7 @@ export class MailProcessor {
       `Sending ${job.data.action} e-mail to ${job.data.user.email}`,
     );
 
-    const url = `${process.env.URL}/${job.data.action}/${job.data.code}`;
+    const url = `${process.env.APP_URL}/${job.data.action}/${job.data.code}`;
 
     try {
       const result = await this.mailerService.sendMail({
