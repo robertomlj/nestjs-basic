@@ -24,7 +24,5 @@ export class AuthService {
     const replacer = new RegExp('/', 'g');
 
     const code = await firstCode.replace(replacer, '');
-
-    console.log(user);
   }
 }
