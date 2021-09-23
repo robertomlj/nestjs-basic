@@ -45,13 +45,19 @@ export class MailProcessor {
 
   @Process('send-mail')
   async sendMail(
-    job: Job<{ user: User; code: string; action: string; subject: string }>,
+    job: Job<{
+      user: User;
+      code: string;
+      action: string;
+      subject: string;
+      url: string;
+    }>,
   ): Promise<any> {
     this.logger.log(
       `Sending ${job.data.action} e-mail to ${job.data.user.email}`,
     );
 
-    const url = `${process.env.APP_URL}/${job.data.action}/${job.data.code}`;
+    const url = job.data.url;
 
     try {
       const result = await this.mailerService.sendMail({

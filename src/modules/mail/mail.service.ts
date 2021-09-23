@@ -15,7 +15,8 @@ export class MailService {
     code: string = null,
     action: string,
     subject: string,
+    url: string = null,
   ): Promise<void> {
-    await this.mailQueue.add('send-mail', { user, code, action, subject });
+    await this.mailQueue.add('send-mail', { user, code, action, subject, url });
   }
 }

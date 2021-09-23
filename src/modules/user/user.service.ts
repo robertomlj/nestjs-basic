@@ -60,11 +60,14 @@ export class UserService {
 
     const result = await this.usersRepository.save(entity);
 
+    const url = `${process.env.APP_URL}/token/confirmation/${code}`;
+
     this.mailService.sendMail(
       result,
       code,
       'confirmation',
       'Confirmação de cadastro',
+      url,
     );
   }
 

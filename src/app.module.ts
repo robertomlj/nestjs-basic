@@ -6,6 +6,7 @@ import { UserModule } from './modules/user/user.module';
 import { TokenModule } from './modules/token/token.module';
 import { getConnectionOptions } from 'typeorm';
 import { MailModule } from './modules/mail/mail.module';
+import { AuthModule } from './modules/auth/auth.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { MailModule } from './modules/mail/mail.module';
     UserModule,
     TokenModule,
     MailModule,
+    AuthModule,
   ],
   controllers: [],
   providers: [],

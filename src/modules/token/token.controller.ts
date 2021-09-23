@@ -1,7 +1,7 @@
 import { Controller, Get, Param, Render } from '@nestjs/common';
 import { TokenService } from './token.service';
 
-@Controller()
+@Controller('token')
 export class TokenController {
   constructor(private tokenService: TokenService) {}
 
@@ -11,7 +11,7 @@ export class TokenController {
     const result = await this.tokenService.confirmation(params.code);
 
     if (result.success) {
-      return { name: 'Roberto', success: true };
+      return { name: result.name, success: true };
     }
 
     return { success: false };

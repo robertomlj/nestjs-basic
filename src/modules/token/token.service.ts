@@ -42,7 +42,7 @@ export class TokenService {
 
       this.tokenRepository.delete(token[0].id);
 
-      return { token, success: true };
+      return { name: token[0].user.firstName, success: true };
     }
 
     return { success: false };
