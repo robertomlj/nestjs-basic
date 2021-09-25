@@ -43,29 +43,37 @@ export class MailProcessor {
     );
   }
 
-  @Process('confirmation')
-  async sendConfirmationMail(
-    job: Job<{ user: User; code: string }>,
+  @Process('send-mail')
+  async sendMail(
+    job: Job<{
+      user: User;
+      code: string;
+      action: string;
+      subject: string;
+      url: string;
+    }>,
   ): Promise<any> {
-    this.logger.log(`Sending confirmation e-mail to ${job.data.user.email}`);
+    this.logger.log(
+      `Sending ${job.data.action} e-mail to ${job.data.user.email}`,
+    );
 
-    const url = `${process.env.URL}/confirmation/${job.data.code}`;
+    const url = job.data.url;
 
     try {
       const result = await this.mailerService.sendMail({
-        template: './confirmation',
+        template: `./${job.data.action}`,
         context: {
           ...plainToClass(User, job.data.user),
           url: url,
         },
-        subject: `Confirmação de criação de usuário`,
+        subject: job.data.subject,
         to: job.data.user.email,
       });
 
       return result;
     } catch (error) {
       this.logger.error(
-        `Failed to send confirmation email to ${job.data.user.email}`,
+        `Failed to send ${job.data.action} email to ${job.data.user.email}`,
         error.stack,
       );
       throw error;

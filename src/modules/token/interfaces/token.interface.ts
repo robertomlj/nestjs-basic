@@ -1,4 +1,4 @@
-export interface Token {
+export interface IToken {
   code: string;
   type: string;
 }

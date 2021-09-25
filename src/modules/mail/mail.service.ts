@@ -10,7 +10,13 @@ export class MailService {
     private mailQueue: Queue,
   ) {}
 
-  async sendConfirmationEmail(user: User, code: string): Promise<void> {
-    await this.mailQueue.add('confirmation', { user, code });
+  async sendMail(
+    user: User,
+    code: string = null,
+    action: string,
+    subject: string,
+    url: string = null,
+  ): Promise<void> {
+    await this.mailQueue.add('send-mail', { user, code, action, subject, url });
   }
 }

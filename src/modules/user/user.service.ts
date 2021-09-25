@@ -50,15 +50,25 @@ export class UserService {
 
     const firstCode = await bcrypt.hash(user.email, salt);
 
-    const code = await firstCode.replace('/', '');
+    const replacer = new RegExp('/', 'g');
 
-    const newUser = { ...user, tokens: [{ code, type: 'active' }] };
+    const code = await firstCode.replace(replacer, '');
+
+    const newUser = { ...user, tokens: [{ code }] };
 
     const entity = this.usersRepository.create(newUser);
 
     const result = await this.usersRepository.save(entity);
 
-    this.mailService.sendConfirmationEmail(result, code);
+    const url = `${process.env.APP_URL}/token/confirmation/${code}`;
+
+    this.mailService.sendMail(
+      result,
+      code,
+      'confirmation',
+      'Confirmação de cadastro',
+      url,
+    );
   }
 
   async update(id: number, user: UpdateUserDto): Promise<User> {

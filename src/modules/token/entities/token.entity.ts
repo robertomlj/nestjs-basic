@@ -9,9 +9,12 @@ export class Token {
   @Column()
   code: string;
 
-  @Column()
+  @Column({ default: 'confirmation' })
   type: string;
 
-  @ManyToOne((type) => User, (user) => user.tokens, { onDelete: 'CASCADE' })
+  @ManyToOne((type) => User, (user) => user.tokens, {
+    cascade: ['update', 'remove'],
+    onDelete: 'CASCADE',
+  })
   user: User;
 }
