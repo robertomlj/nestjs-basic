@@ -6,10 +6,11 @@ import { UserModule } from './modules/user/user.module';
 import { TokenModule } from './modules/token/token.module';
 import { getConnectionOptions } from 'typeorm';
 import { MailModule } from './modules/mail/mail.module';
+import configuration from './config/configuration';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
     TypeOrmModule.forRootAsync({
       useFactory: async () =>
         Object.assign(await getConnectionOptions(), {

@@ -49,7 +49,7 @@ export class MailProcessor {
   ): Promise<any> {
     this.logger.log(`Sending confirmation e-mail to ${job.data.user.email}`);
 
-    const url = `${process.env.URL}/user/${job.data.user.id}/confirmation/${job.data.code}`;
+    const url = `${process.env.URL}/confirmation/${job.data.code}`;
 
     try {
       const result = await this.mailerService.sendMail({
