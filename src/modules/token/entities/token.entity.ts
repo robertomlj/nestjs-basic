@@ -13,7 +13,7 @@ export class Token {
   type: string;
 
   @ManyToOne((type) => User, (user) => user.tokens, {
-    cascade: ['update', 'remove'],
+    cascade: ['update'],
     onDelete: 'CASCADE',
   })
   user: User;

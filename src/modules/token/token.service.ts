@@ -8,7 +8,7 @@ import { Token } from './entities/token.entity';
 export class TokenService {
   constructor(
     @InjectRepository(Token)
-    private tokenRepository: Repository<Token>,
+    private readonly tokenRepository: Repository<Token>,
   ) {}
 
   // findAll(): Promise<Token[]> {

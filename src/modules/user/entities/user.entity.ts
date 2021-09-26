@@ -34,7 +34,7 @@ export class User {
   accessLevel: string;
 
   @OneToMany(() => Token, (token) => token.user, {
-    cascade: ['insert', 'update'],
+    cascade: true,
   })
   @JoinTable()
   tokens: Token[];

@@ -16,8 +16,8 @@ import { MailService } from '../mail/mail.service';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    public userRepository: Repository<User>,
-    private mailService: MailService,
+    private readonly userRepository: Repository<User>,
+    private readonly mailService: MailService,
   ) {}
 
   async findAll(): Promise<User[]> {
