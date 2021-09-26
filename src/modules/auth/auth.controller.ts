@@ -6,8 +6,8 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
-  @Post('forgout-password')
-  forgout(@Body() body: ForgotPasswordDto) {
+  @Post('forgot-password')
+  forgot(@Body() body: ForgotPasswordDto) {
     return this.authService.forgot(body);
   }
 }

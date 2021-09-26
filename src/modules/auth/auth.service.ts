@@ -1,15 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { Repository } from 'typeorm';
-import { User } from '../user/entities/user.entity';
 import * as bcrypt from 'bcrypt';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
+import { UserService } from '../user/user.service';
 
 @Injectable()
 export class AuthService {
-  constructor(private userRepository: Repository<User>) {}
+  constructor(private userService: UserService) {}
 
   async forgot(body: ForgotPasswordDto): Promise<any> {
-    const user = await this.userRepository.find({
+    const user = await this.userService.userRepository.find({
       where: { email: body.email },
     });
 

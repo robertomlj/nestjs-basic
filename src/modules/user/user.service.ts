@@ -16,16 +16,16 @@ import { MailService } from '../mail/mail.service';
 export class UserService {
   constructor(
     @InjectRepository(User)
-    private usersRepository: Repository<User>,
+    public userRepository: Repository<User>,
     private mailService: MailService,
   ) {}
 
   async findAll(): Promise<User[]> {
-    return await this.usersRepository.find();
+    return await this.userRepository.find();
   }
 
   async findOne(id: number): Promise<User> {
-    const user = await this.usersRepository.findOne(id);
+    const user = await this.userRepository.findOne(id);
 
     if (!user) {
       throw new HttpException(`User  ID ${id} not found`, HttpStatus.NOT_FOUND);
@@ -35,7 +35,7 @@ export class UserService {
   }
 
   async create(user: CreateUserDto): Promise<void> {
-    const exists = await this.usersRepository.find({
+    const exists = await this.userRepository.find({
       where: { email: user.email },
     });
 
@@ -56,9 +56,9 @@ export class UserService {
 
     const newUser = { ...user, tokens: [{ code }] };
 
-    const entity = this.usersRepository.create(newUser);
+    const entity = this.userRepository.create(newUser);
 
-    const result = await this.usersRepository.save(entity);
+    const result = await this.userRepository.save(entity);
 
     const url = `${process.env.APP_URL}/token/confirmation/${code}`;
 
@@ -72,16 +72,16 @@ export class UserService {
   }
 
   async update(id: number, user: UpdateUserDto): Promise<User> {
-    const entity = await this.usersRepository.preload({ id: id, ...user });
+    const entity = await this.userRepository.preload({ id: id, ...user });
 
     if (!entity) {
       throw new NotFoundException(`User ID ${id} not found`);
     }
 
-    return this.usersRepository.save(entity);
+    return this.userRepository.save(entity);
   }
 
   async remove(id: number): Promise<void> {
-    await this.usersRepository.delete(id);
+    await this.userRepository.delete(id);
   }
 }
