@@ -4,12 +4,16 @@ import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
+import { Token } from '../token/entities/token.entity';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
+
+    @InjectRepository(Token)
+    private readonly tokenRepository: Repository<Token>,
   ) {}
 
   async forgot(body: ForgotPasswordDto): Promise<any> {
