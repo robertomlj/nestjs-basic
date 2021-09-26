@@ -36,7 +36,6 @@ export class User {
   @OneToMany(() => Token, (token) => token.user, {
     cascade: true,
   })
-  @JoinTable()
   tokens: Token[];
 
   @BeforeInsert()

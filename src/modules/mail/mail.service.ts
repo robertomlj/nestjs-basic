@@ -11,7 +11,7 @@ export class MailService {
   ) {}
 
   async sendMail(
-    user: User,
+    user: User = null,
     code: string = null,
     action: string,
     subject: string,
