@@ -11,10 +11,10 @@ export class AuthController {
     return this.authService.forgot(body);
   }
 
-  @Get('forgot-password/:token')
-  @Render('forgot-password')
-  async confirmForgot(@Param('token') token: string) {
-    const result = await this.authService.confirmForgot(token);
+  @Get('reset-password/:token')
+  @Render('resetPassword')
+  async confirmReset(@Param('token') token: string) {
+    const result = await this.authService.confirmReset(token);
 
     return { user: result.user, success: result.success };
   }

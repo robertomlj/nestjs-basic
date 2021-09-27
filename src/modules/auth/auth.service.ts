@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  Injectable,
+  NotAcceptableException,
+  NotFoundException,
+} from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -6,6 +10,7 @@ import { User } from '../user/entities/user.entity';
 import { Repository } from 'typeorm';
 import { Token } from '../token/entities/token.entity';
 import { MailService } from '../mail/mail.service';
+import * as moment from 'moment';
 
 @Injectable()
 export class AuthService {
@@ -29,11 +34,21 @@ export class AuthService {
     }
 
     const token = await this.tokenRepository.find({
-      where: { action: 'forgot', user: user[0] },
+      where: { type: 'forgot', user: user[0] },
     });
-    // realizar alterações aqui para alinhar todas as verificações, inclusive tempo de aguardo para o token
-    if (token.length === 0) {
-      throw new NotFoundException(`E-mail not found`);
+
+    if (token.length >= 1) {
+      const createdAt = moment(token[0].createdAt);
+      const limit = createdAt.add(10, 'm');
+      const now = moment();
+
+      if (now.isBefore(limit)) {
+        throw new NotAcceptableException(
+          `There is a another pending request, not allowed`,
+        );
+      }
+
+      this.tokenRepository.delete(token[0].id);
     }
 
     const salt = await bcrypt.genSalt();
@@ -53,21 +68,21 @@ export class AuthService {
     this.mailService.sendMail(
       user[0],
       code,
-      'forgot',
+      'forgotPassword',
       'Redefinição de senha',
       `${process.env.APP_URL}/auth/reset-password/${code}`,
     );
   }
 
-  async confirmForgot(code: string): Promise<any> {
+  async confirmReset(code: string): Promise<any> {
     const token = await this.tokenRepository.find({
       relations: ['user'],
       where: { code: code, type: 'forgot' },
     });
 
-    this.tokenRepository.delete(token[0].id);
-
     if (token.length >= 1) {
+      this.tokenRepository.delete(token[0].id);
+
       return { user: token[0].user, success: true };
     }
 
