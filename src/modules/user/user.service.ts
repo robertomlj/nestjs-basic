@@ -36,11 +36,11 @@ export class UserService {
   }
 
   async create(user: CreateUserDto): Promise<void> {
-    const exists = await this.userRepository.find({
+    const exists = await this.userRepository.findOne({
       where: { email: user.email },
     });
 
-    if (exists.length >= 1) {
+    if (exists) {
       throw new HttpException(
         `email ${user.email} already exists.`,
         HttpStatus.BAD_REQUEST,

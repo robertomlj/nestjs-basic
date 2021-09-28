@@ -2,6 +2,7 @@ import {
   Injectable,
   NotAcceptableException,
   NotFoundException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { ForgotPasswordDto } from './dto/forgot-password.dto';
@@ -11,6 +12,7 @@ import { Repository } from 'typeorm';
 import { Token } from '../token/entities/token.entity';
 import { MailService } from '../mail/mail.service';
 import * as moment from 'moment';
+import { AuthDto } from './dto/auth.dto';
 
 @Injectable()
 export class AuthService {
@@ -24,21 +26,43 @@ export class AuthService {
     private readonly mailService: MailService,
   ) {}
 
+  async signIn(body: AuthDto): Promise<any> {
+    const { email, password } = body;
+
+    const user = await this.userRepository.findOne({ where: { email } });
+
+    if (!user) {
+      throw new NotFoundException(`User ${email} not found.`);
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException(`User not actived.`);
+    }
+
+    const compare = await bcrypt.compare(password, user.password);
+
+    console.log(compare);
+
+    if (!compare) {
+      throw new UnauthorizedException(`Password is wrong.`);
+    }
+  }
+
   async forgot(body: ForgotPasswordDto): Promise<any> {
-    const user = await this.userRepository.find({
+    const user = await this.userRepository.findOne({
       where: { email: body.email },
     });
 
-    if (user.length === 0) {
+    if (!user) {
       throw new NotFoundException(`E-mail not found`);
     }
 
-    const token = await this.tokenRepository.find({
-      where: { type: 'forgot', user: user[0] },
+    const token = await this.tokenRepository.findOne({
+      where: { type: 'forgot', user: user },
     });
 
-    if (token.length >= 1) {
-      const createdAt = moment(token[0].createdAt);
+    if (token) {
+      const createdAt = moment(token.createdAt);
       const limit = createdAt.add(10, 'm');
       const now = moment();
 
@@ -48,7 +72,7 @@ export class AuthService {
         );
       }
 
-      this.tokenRepository.delete(token[0].id);
+      this.tokenRepository.delete(token.id);
     }
 
     const salt = await bcrypt.genSalt();
@@ -75,15 +99,15 @@ export class AuthService {
   }
 
   async confirmReset(code: string): Promise<any> {
-    const token = await this.tokenRepository.find({
+    const token = await this.tokenRepository.findOne({
       relations: ['user'],
       where: { code: code, type: 'forgot' },
     });
 
-    if (token.length >= 1) {
-      this.tokenRepository.delete(token[0].id);
+    if (token) {
+      this.tokenRepository.delete(token.id);
 
-      return { user: token[0].user, success: true };
+      return { user: token.user, success: true };
     }
 
     return { user: null, success: false };
