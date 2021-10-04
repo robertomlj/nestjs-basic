@@ -13,17 +13,18 @@ import { Token } from '../token/entities/token.entity';
 import { MailService } from '../mail/mail.service';
 import * as moment from 'moment';
 import { AuthDto } from './dto/auth.dto';
+import { JwtService } from '@nestjs/jwt';
 
 @Injectable()
 export class AuthService {
   constructor(
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-
     @InjectRepository(Token)
     private readonly tokenRepository: Repository<Token>,
 
     private readonly mailService: MailService,
+    private readonly jwtService: JwtService,
   ) {}
 
   async signIn(body: AuthDto): Promise<any> {
@@ -41,11 +42,16 @@ export class AuthService {
 
     const compare = await bcrypt.compare(password, user.password);
 
-    console.log(compare);
-
     if (!compare) {
       throw new UnauthorizedException(`Password is wrong.`);
     }
+
+    return {
+      access_token: this.jwtService.sign({
+        username: user.email,
+        sub: user.id,
+      }),
+    };
   }
 
   async forgot(body: ForgotPasswordDto): Promise<any> {

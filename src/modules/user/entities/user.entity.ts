@@ -8,8 +8,10 @@ import {
   BeforeUpdate,
   CreateDateColumn,
   UpdateDateColumn,
+  AfterLoad,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
+import { Exclude } from 'class-transformer';
 
 @Entity()
 export class User {
@@ -25,7 +27,7 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column()
+  @Column({ type: 'varchar', length: 60 })
   password: string;
 
   @Column({ default: false })
@@ -52,9 +54,20 @@ export class User {
   })
   tokens: Token[];
 
+  private tempPassword: string;
+
+  @AfterLoad()
+  private loadTempPassword(): void {
+    this.tempPassword = this.password;
+  }
+
   @BeforeInsert()
   @BeforeUpdate()
   async setPassword(password: string) {
-    this.password = await bcrypt.hash(password || this.password, 10);
+    if (this.tempPassword !== this.password) {
+      const salt = await bcrypt.genSalt(10);
+
+      this.password = await bcrypt.hash(password || this.password, salt);
+    }
   }
 }
