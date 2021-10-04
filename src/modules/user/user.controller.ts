@@ -8,7 +8,9 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  Request,
 } from '@nestjs/common';
+import { Public } from 'src/decorators/public.decorator';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -18,7 +20,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  findAll() {
+  findAll(@Request() req) {
+    console.log(req.user);
     return this.userService.findAll();
   }
 
@@ -33,6 +36,7 @@ export class UserController {
     return this.userService.findOne(id);
   }
 
+  @Public()
   @Post()
   create(@Body() body: CreateUserDto) {
     return this.userService.create(body);
