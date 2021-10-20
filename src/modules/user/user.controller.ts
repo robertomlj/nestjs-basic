@@ -11,6 +11,8 @@ import {
   Request,
 } from '@nestjs/common';
 import { Public } from 'src/decorators/public.decorator';
+import { Roles } from 'src/decorators/roles.decorator';
+import { Role } from '../auth/roles/role.enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
 import { UserService } from './user.service';
@@ -20,12 +22,13 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
+  @Roles(Role.Admin)
   findAll(@Request() req) {
-    console.log(req.user);
     return this.userService.findAll();
   }
 
   @Get(':id')
+  @Roles(Role.Admin, Role.User)
   findOne(
     @Param(
       'id',
@@ -43,6 +46,7 @@ export class UserController {
   }
 
   @Patch(':id')
+  @Roles(Role.Admin, Role.User)
   update(
     @Param(
       'id',
@@ -55,6 +59,7 @@ export class UserController {
   }
 
   @Delete(':id')
+  @Roles(Role.Admin)
   remove(
     @Param(
       'id',

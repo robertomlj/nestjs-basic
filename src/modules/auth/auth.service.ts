@@ -48,8 +48,9 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign({
-        email: user.email,
+        isActive: user.isActive,
         sub: user.id,
+        roles: user.roles,
       }),
     };
   }
@@ -83,20 +84,20 @@ export class AuthService {
 
     const salt = await bcrypt.genSalt();
 
-    const firstCode = await bcrypt.hash(user[0].email, salt);
+    const firstCode = await bcrypt.hash(user.email, salt);
 
     const replacer = new RegExp('/', 'g');
 
     const code = await firstCode.replace(replacer, '');
 
-    const data = { type: 'forgot', code, user: user[0] };
+    const data = { type: 'forgot', code, user: user };
 
     const entity = this.tokenRepository.create(data);
 
     await this.tokenRepository.save(entity);
 
     this.mailService.sendMail(
-      user[0],
+      user,
       code,
       'forgotPassword',
       'Redefinição de senha',

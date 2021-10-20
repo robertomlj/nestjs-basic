@@ -11,7 +11,7 @@ import {
   AfterLoad,
 } from 'typeorm';
 import * as bcrypt from 'bcrypt';
-import { Exclude } from 'class-transformer';
+import { Role } from 'src/modules/auth/roles/role.enum';
 
 @Entity()
 export class User {
@@ -27,14 +27,14 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column({ type: 'varchar', length: 60 })
+  @Column('varchar', { length: 60 })
   password: string;
 
   @Column({ default: false })
   isActive: boolean;
 
-  @Column({ default: 'user' })
-  accessLevel: string;
+  @Column('varchar', { array: true, default: ['user'] })
+  roles: Role[];
 
   @CreateDateColumn({
     type: 'timestamp',
