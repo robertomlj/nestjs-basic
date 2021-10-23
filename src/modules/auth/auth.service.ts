@@ -48,9 +48,7 @@ export class AuthService {
 
     return {
       access_token: this.jwtService.sign({
-        isActive: user.isActive,
         sub: user.id,
-        roles: user.roles,
       }),
     };
   }

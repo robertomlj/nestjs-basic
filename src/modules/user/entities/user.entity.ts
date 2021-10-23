@@ -27,13 +27,13 @@ export class User {
   @Column({ unique: true })
   email: string;
 
-  @Column('varchar', { length: 60 })
+  @Column({ type: 'varchar', length: 60 })
   password: string;
 
   @Column({ default: false })
   isActive: boolean;
 
-  @Column('varchar', { array: true, default: ['user'] })
+  @Column({ type: 'text', array: true, default: [Role.User] })
   roles: Role[];
 
   @CreateDateColumn({

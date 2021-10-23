@@ -6,6 +6,7 @@ import { jwtConfig } from 'src/config/jwt.config';
 import { MailModule } from '../mail/mail.module';
 import { Token } from '../token/entities/token.entity';
 import { User } from '../user/entities/user.entity';
+import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
 import { JwtStrategy } from './jwt.strategy';
@@ -16,6 +17,7 @@ import { JwtStrategy } from './jwt.strategy';
     MailModule,
     PassportModule,
     JwtModule.register(jwtConfig),
+    UserModule,
   ],
   controllers: [AuthController],
   providers: [AuthService, JwtStrategy],

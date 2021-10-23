@@ -1,5 +1,12 @@
-import { IsString, Length, ValidateIf, IsOptional } from 'class-validator';
+import {
+  IsString,
+  Length,
+  ValidateIf,
+  IsOptional,
+  MaxLength,
+} from 'class-validator';
 import { Match } from 'src/decorators/match.decorator';
+import { Role } from 'src/modules/auth/roles/role.enum';
 
 export class UpdateUserDto {
   @IsOptional()
@@ -19,8 +26,11 @@ export class UpdateUserDto {
   @Match('password')
   readonly confirmPassword?: string;
 
-  // @IsString()
-  // readonly isActive?: string;
-  // @IsString()
-  // readonly accessLevel?: string;
+  @IsOptional()
+  @IsString()
+  readonly isActive?: boolean;
+
+  @IsOptional()
+  @MaxLength(20, { each: true })
+  readonly roles?: Role[];
 }

@@ -8,7 +8,8 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Request,
+  Req,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/decorators/roles.decorator';
@@ -22,8 +23,8 @@ export class UserController {
   constructor(private readonly userService: UserService) {}
 
   @Get()
-  @Roles(Role.Admin)
-  findAll(@Request() req) {
+  @Roles(Role.Admin, Role.User)
+  findAll() {
     return this.userService.findAll();
   }
 
@@ -54,7 +55,14 @@ export class UserController {
     )
     id: number,
     @Body() body: UpdateUserDto,
+    @Req() req,
   ) {
+    const { user } = req;
+
+    if ((body.roles || body.isActive) && !user.roles.includes('admin')) {
+      throw new UnauthorizedException('You not is a administrator');
+    }
+
     return this.userService.update(id, body);
   }
 

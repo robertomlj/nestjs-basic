@@ -4,6 +4,6 @@ export interface IUser {
   email: string;
   password: string;
   isActive?: boolean;
-  accessLevel?: string;
+  roles?: string;
   tokens?: [];
 }
