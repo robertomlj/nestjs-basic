@@ -6,6 +6,7 @@ import { User } from './entities/user.entity';
 import { MailModule } from '../mail/mail.module';
 import { APP_GUARD } from '@nestjs/core';
 import { CanAdminUpdateGuard } from 'src/guards/can-admin-update.guard';
+import { UpdateMySelfGuard } from 'src/guards/update-my-self.guard';
 
 @Module({
   imports: [TypeOrmModule.forFeature([User]), MailModule],

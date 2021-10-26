@@ -61,7 +61,7 @@ export class UserService {
 
     const result = await this.userRepository.save(entity);
 
-    const url = `${process.env.APP_URL}/token/confirmation/${code}`;
+    const url = `${process.env.APP_URL}:${process.env.PORT}/token/confirmation/${code}`;
 
     this.mailService.sendMail(
       result,

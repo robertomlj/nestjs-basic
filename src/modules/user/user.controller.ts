@@ -8,10 +8,12 @@ import {
   ParseIntPipe,
   Patch,
   Post,
+  UseGuards,
 } from '@nestjs/common';
 import { CanAdminUpdate } from 'src/decorators/can-admin-update.decorator';
 import { Public } from 'src/decorators/public.decorator';
 import { Roles } from 'src/decorators/roles.decorator';
+import { UpdateMySelfGuard } from 'src/guards/update-my-self.guard';
 import { Role } from '../auth/roles/role.enum';
 import { CreateUserDto } from './dto/create-user.dto';
 import { UpdateUserDto } from './dto/update-user.dto';
@@ -47,6 +49,7 @@ export class UserController {
 
   @Patch(':id')
   @Roles(Role.Admin, Role.User)
+  @UseGuards(UpdateMySelfGuard)
   @CanAdminUpdate('roles', 'isActive')
   update(
     @Param(

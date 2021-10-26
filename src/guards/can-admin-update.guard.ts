@@ -19,8 +19,7 @@ export class CanAdminUpdateGuard implements CanActivate {
       return true;
     }
 
-    const { body } = context.switchToHttp().getRequest();
-    const { user } = context.switchToHttp().getRequest();
+    const { body, user } = context.switchToHttp().getRequest();
 
     const exists = properties.some((property) => body[property] !== undefined);
 
