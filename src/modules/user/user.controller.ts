@@ -8,8 +8,6 @@ import {
   ParseIntPipe,
   Patch,
   Post,
-  Req,
-  UnauthorizedException,
 } from '@nestjs/common';
 import { CanAdminUpdate } from 'src/decorators/can-admin-update.decorator';
 import { Public } from 'src/decorators/public.decorator';
@@ -57,14 +55,7 @@ export class UserController {
     )
     id: number,
     @Body() body: UpdateUserDto,
-    @Req() req,
   ) {
-    // const { user } = req;
-
-    // if ((body.roles || body.isActive) && !user.roles.includes('admin')) {
-    //   throw new UnauthorizedException('You not is a administrator');
-    // }
-
     return this.userService.update(id, body);
   }
 
