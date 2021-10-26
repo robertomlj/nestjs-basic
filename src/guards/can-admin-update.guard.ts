@@ -2,9 +2,10 @@ import { CanActivate, ExecutionContext, Injectable } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { Observable } from 'rxjs';
 import { PROPERTIES_KEY } from 'src/decorators/can-admin-update.decorator';
+import { Role } from 'src/modules/auth/roles/role.enum';
 
 @Injectable()
-export class CanUpdate implements CanActivate {
+export class CanAdminUpdateGuard implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   canActivate(
@@ -21,11 +22,11 @@ export class CanUpdate implements CanActivate {
     const { body } = context.switchToHttp().getRequest();
     const { user } = context.switchToHttp().getRequest();
 
-    properties.map((property) => {
-      if (!user.roles?.includes('admin')) {
-        return false;
-      }
-    });
+    const exists = properties.some((property) => body[property] !== undefined);
+
+    if (exists) {
+      return user.roles?.includes(Role.Admin) ? true : false;
+    }
 
     return true;
   }

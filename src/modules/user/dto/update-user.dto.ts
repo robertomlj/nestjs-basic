@@ -4,6 +4,7 @@ import {
   ValidateIf,
   IsOptional,
   MaxLength,
+  IsBoolean,
 } from 'class-validator';
 import { Match } from 'src/decorators/match.decorator';
 import { Role } from 'src/modules/auth/roles/role.enum';
@@ -27,7 +28,7 @@ export class UpdateUserDto {
   readonly confirmPassword?: string;
 
   @IsOptional()
-  @IsString()
+  @IsBoolean()
   readonly isActive?: boolean;
 
   @IsOptional()
